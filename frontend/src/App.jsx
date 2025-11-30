@@ -1,36 +1,57 @@
-import { useState, useRef } from "react";
+import { useState } from "react";
+import { useFileUpload } from "./hooks/useFileUpload";
+import ResumeUploadSection from "./components/ResumeUploadSection/ResumeUploadSection";
+import JobDescription from "./components/JobDescription/JobDescription";
 import "./App.css";
 
+/**
+ * Main App component that orchestrates resume upload and job description flow
+ */
 function App() {
-  const [resumes, setResumes] = useState([]);
+  const { files, fileInputRef, addFiles, removeFile, resetInput } = useFileUpload();
   const [jobDescription, setJobDescription] = useState("");
-  const [showJobDescriptionInput, setShowJobDescriptionInput] = useState(false);
-  const fileInputRef = useRef(null);
+  const [showJobDescription, setShowJobDescription] = useState(false);
 
-  const handleFileUpload = (event) => {
-    const files = Array.from(event.target.files);
-    const newResumes = files.map((file) => ({
-      id: Date.now() + Math.random(),
-      name: file.name,
-      file: file,
-    }));
-    setResumes((prev) => [...prev, ...newResumes]);
-    // Reset input to allow selecting the same file again
-    if (fileInputRef.current) {
-      fileInputRef.current.value = "";
-    }
+  /**
+   * Handles file upload and resets the input
+   * @param {File[]} uploadedFiles - Array of uploaded PDF files
+   */
+  const handleFilesUploaded = (uploadedFiles) => {
+    addFiles(uploadedFiles);
+    resetInput();
   };
 
-  const handleRemoveFile = (id) => {
-    setResumes((prev) => prev.filter((resume) => resume.id !== id));
+  /**
+   * Handles job description button click and triggers slide animation
+   */
+  const handleAddJobDescription = () => {
+    setShowJobDescription(true);
   };
 
-  const handleJobDescriptionClick = () => {
-    setShowJobDescriptionInput(true);
-  };
-
+  /**
+   * Handles job description text change
+   * @param {Event} event - Change event from textarea
+   */
   const handleJobDescriptionChange = (event) => {
     setJobDescription(event.target.value);
+  };
+
+  /**
+   * Handles back button click to return to upload section
+   */
+  const handleBack = () => {
+    setShowJobDescription(false);
+  };
+
+  /**
+   * Handles filter button click
+   */
+  const handleFilter = () => {
+    // TODO: Implement filter logic
+    console.log("Filtering resumes with:", {
+      files: files.map((f) => f.name),
+      jobDescription,
+    });
   };
 
   return (
@@ -40,98 +61,59 @@ function App() {
           Resume Filter
         </h1>
 
-        {/* Resume Upload Section */}
-        <div className="bg-white rounded-lg shadow-md p-6 mb-6">
-          <h2 className="text-2xl font-semibold text-gray-800 mb-4">
-            Upload Resumes
-          </h2>
-          
-          <div className="mb-4">
-            <label
-              htmlFor="resume-upload"
-              className="inline-block bg-blue-600 text-white px-6 py-3 rounded-lg cursor-pointer hover:bg-blue-700 transition-colors duration-200 font-medium"
-            >
-              Choose Files
-            </label>
-            <input
-              id="resume-upload"
-              type="file"
-              ref={fileInputRef}
-              onChange={handleFileUpload}
-              multiple
-              accept=".pdf,.doc,.docx"
-              className="hidden"
+        {/* Main Content Container with relative positioning for animations */}
+        <div className="relative min-h-[400px] overflow-hidden">
+          {/* Resume Upload Section */}
+          <div
+            className={`transition-all duration-500 ease-in-out ${
+              !showJobDescription
+                ? "opacity-100 translate-x-0"
+                : "opacity-0 -translate-x-full absolute w-full"
+            }`}
+          >
+            <ResumeUploadSection
+              files={files}
+              onFilesUploaded={handleFilesUploaded}
+              onRemoveFile={removeFile}
+              fileInputRef={fileInputRef}
+              isVisible={!showJobDescription}
             />
           </div>
 
-          {/* Uploaded Files List */}
-          {resumes.length > 0 && (
-            <div className="mt-6">
-              <h3 className="text-lg font-medium text-gray-700 mb-3">
-                Uploaded Files ({resumes.length})
-              </h3>
-              <div className="space-y-2">
-                {resumes.map((resume) => (
-                  <div
-                    key={resume.id}
-                    className="flex items-center justify-between bg-gray-50 border border-gray-200 rounded-lg p-3 hover:bg-gray-100 transition-colors"
-                  >
-                    <span className="text-gray-800 font-medium flex-1 truncate mr-3">
-                      {resume.name}
-                    </span>
-                    <button
-                      onClick={() => handleRemoveFile(resume.id)}
-                      className="flex-shrink-0 text-red-600 hover:text-red-800 hover:bg-red-50 rounded-full p-1 transition-colors"
-                      aria-label={`Remove ${resume.name}`}
-                    >
-                      <svg
-                        xmlns="http://www.w3.org/2000/svg"
-                        className="h-5 w-5"
-                        viewBox="0 0 20 20"
-                        fill="currentColor"
-                      >
-                        <path
-                          fillRule="evenodd"
-                          d="M4.293 4.293a1 1 0 011.414 0L10 8.586l4.293-4.293a1 1 0 111.414 1.414L11.414 10l4.293 4.293a1 1 0 01-1.414 1.414L10 11.414l-4.293 4.293a1 1 0 01-1.414-1.414L8.586 10 4.293 5.707a1 1 0 010-1.414z"
-                          clipRule="evenodd"
-                        />
-                      </svg>
-                    </button>
-                  </div>
-                ))}
-              </div>
+          {/* Job Description Button - shown when upload section is visible */}
+          {!showJobDescription && (
+            <div className="bg-white rounded-lg shadow-md p-6 mt-6">
+              <h2 className="text-2xl font-semibold text-gray-800 mb-4">
+                Job Description
+              </h2>
+              <button
+                onClick={handleAddJobDescription}
+                className="bg-green-600 text-white px-6 py-3 rounded-lg hover:bg-green-700 transition-colors duration-200 font-medium"
+                type="button"
+              >
+                Add Job Description
+              </button>
             </div>
           )}
-        </div>
 
-        {/* Job Description Section */}
-        <div className="bg-white rounded-lg shadow-md p-6">
-          <h2 className="text-2xl font-semibold text-gray-800 mb-4">
-            Job Description
-          </h2>
-          
-          {!showJobDescriptionInput ? (
-            <button
-              onClick={handleJobDescriptionClick}
-              className="bg-green-600 text-white px-6 py-3 rounded-lg hover:bg-green-700 transition-colors duration-200 font-medium"
-            >
-              Add Job Description
-            </button>
-          ) : (
-            <div>
-              <textarea
-                value={jobDescription}
-                onChange={handleJobDescriptionChange}
-                placeholder="Enter job description here..."
-                className="w-full h-48 p-4 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent resize-none"
+          {/* Job Description Section - slides in from right */}
+          <div
+            className={`transition-all duration-500 ease-in-out ${
+              showJobDescription
+                ? "opacity-100 translate-x-0"
+                : "opacity-0 translate-x-full absolute w-full top-0"
+            }`}
+          >
+            <div className="bg-white rounded-lg shadow-md p-6">
+              <JobDescription
+                jobDescription={jobDescription}
+                onJobDescriptionChange={handleJobDescriptionChange}
+                isVisible={showJobDescription}
+                onFilter={handleFilter}
+                onBack={handleBack}
               />
-              {jobDescription && (
-                <div className="mt-4 text-sm text-gray-600">
-                  Character count: {jobDescription.length}
-                </div>
-              )}
             </div>
-          )}
+          </div>
         </div>
       </div>
     </div>
