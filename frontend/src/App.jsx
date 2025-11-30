@@ -2,6 +2,7 @@ import { useState } from "react";
 import { useFileUpload } from "./hooks/useFileUpload";
 import ResumeUploadSection from "./components/ResumeUploadSection/ResumeUploadSection";
 import JobDescription from "./components/JobDescription/JobDescription";
+import { filterResumes } from "./services/api";
 import "./App.css";
 
 /**
@@ -11,6 +12,9 @@ function App() {
   const { files, fileInputRef, addFiles, removeFile, resetInput } = useFileUpload();
   const [jobDescription, setJobDescription] = useState("");
   const [showJobDescription, setShowJobDescription] = useState(false);
+  const [isFiltering, setIsFiltering] = useState(false);
+  const [filterError, setFilterError] = useState(null);
+  const [filterResult, setFilterResult] = useState(null);
 
   /**
    * Handles file upload and resets the input
@@ -44,14 +48,44 @@ function App() {
   };
 
   /**
-   * Handles filter button click
+   * Handles filter button click - sends PDFs and job description to backend API
    */
-  const handleFilter = () => {
-    // TODO: Implement filter logic
-    console.log("Filtering resumes with:", {
-      files: files.map((f) => f.name),
-      jobDescription,
-    });
+  const handleFilter = async () => {
+    // Validate that files and job description are provided
+    if (files.length === 0) {
+      setFilterError("Please upload at least one resume PDF file.");
+      return;
+    }
+
+    if (!jobDescription.trim()) {
+      setFilterError("Please enter a job description.");
+      return;
+    }
+
+    // Reset previous error and result
+    setFilterError(null);
+    setFilterResult(null);
+    setIsFiltering(true);
+
+    try {
+      // Extract the actual File objects from the files array
+      const pdfFiles = files.map((fileObj) => fileObj.file);
+
+      // Call the API
+      const result = await filterResumes(pdfFiles, jobDescription);
+
+      // Handle successful response
+      setFilterResult(result);
+      console.log("Filter result:", result);
+    } catch (error) {
+      // Handle error
+      setFilterError(
+        error.message || "Failed to filter resumes. Please try again."
+      );
+      console.error("Filter error:", error);
+    } finally {
+      setIsFiltering(false);
+    }
   };
 
   return (
@@ -111,6 +145,9 @@ function App() {
                 isVisible={showJobDescription}
                 onFilter={handleFilter}
                 onBack={handleBack}
+                isFiltering={isFiltering}
+                filterError={filterError}
+                filterResult={filterResult}
               />
             </div>
           </div>
