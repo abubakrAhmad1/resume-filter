@@ -1,4 +1,5 @@
 import PropTypes from "prop-types";
+import Button from "../Button/Button";
 
 /**
  * FileItem component displays a single uploaded file with delete functionality
@@ -12,11 +13,11 @@ const FileItem = ({ file, onRemove }) => {
       <span className="text-gray-800 font-medium flex-1 truncate mr-3">
         {file.name}
       </span>
-      <button
+      <Button
         onClick={() => onRemove(file.id)}
-        className="flex-shrink-0 text-red-600 hover:text-red-800 hover:bg-red-50 rounded-full p-1 transition-colors"
+        iconOnly
+        className="flex-shrink-0 text-red-600 hover:text-red-800 hover:bg-red-50"
         aria-label={`Remove ${file.name}`}
-        type="button"
       >
         <svg
           xmlns="http://www.w3.org/2000/svg"
@@ -30,7 +31,7 @@ const FileItem = ({ file, onRemove }) => {
             clipRule="evenodd"
           />
         </svg>
-      </button>
+      </Button>
     </div>
   );
 };

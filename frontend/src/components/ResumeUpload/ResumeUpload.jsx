@@ -1,5 +1,6 @@
 import PropTypes from "prop-types";
 import { filterPDFs, validatePDF } from "../../utils/fileValidation";
+import Button from "../Button/Button";
 
 /**
  * ResumeUpload component handles file upload with PDF validation
@@ -34,11 +35,10 @@ const ResumeUpload = ({ onFilesUploaded, fileInputRef }) => {
 
   return (
     <div className="mb-4">
-      <label
-        htmlFor="resume-upload"
-        className="inline-block bg-blue-600 text-white px-6 py-3 rounded-lg cursor-pointer hover:bg-blue-700 transition-colors duration-200 font-medium"
-      >
-        Choose PDF Files
+      <label htmlFor="resume-upload" className="cursor-pointer inline-block">
+        <Button as="span">
+          Choose PDF Files
+        </Button>
       </label>
       <input
         id="resume-upload"

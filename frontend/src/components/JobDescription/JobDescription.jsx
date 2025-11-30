@@ -1,4 +1,5 @@
 import PropTypes from "prop-types";
+import Button from "../Button/Button";
 
 /**
  * JobDescription component handles job description input
@@ -34,25 +35,25 @@ const JobDescription = ({
         <h2 className="text-2xl font-semibold text-gray-800">
           Job Description
         </h2>
-        <button
+        <Button
           onClick={onBack}
-          className="flex items-center gap-2 text-gray-600 hover:text-gray-800 hover:bg-gray-100 px-4 py-2 rounded-lg transition-colors duration-200 font-medium"
-          type="button"
+          icon={
+            <svg
+              xmlns="http://www.w3.org/2000/svg"
+              className="h-5 w-5"
+              viewBox="0 0 20 20"
+              fill="currentColor"
+            >
+              <path
+                fillRule="evenodd"
+                d="M9.707 16.707a1 1 0 01-1.414 0l-6-6a1 1 0 010-1.414l6-6a1 1 0 011.414 1.414L5.414 9H17a1 1 0 110 2H5.414l4.293 4.293a1 1 0 010 1.414z"
+                clipRule="evenodd"
+              />
+            </svg>
+          }
         >
-          <svg
-            xmlns="http://www.w3.org/2000/svg"
-            className="h-5 w-5"
-            viewBox="0 0 20 20"
-            fill="currentColor"
-          >
-            <path
-              fillRule="evenodd"
-              d="M9.707 16.707a1 1 0 01-1.414 0l-6-6a1 1 0 010-1.414l6-6a1 1 0 011.414 1.414L5.414 9H17a1 1 0 110 2H5.414l4.293 4.293a1 1 0 010 1.414z"
-              clipRule="evenodd"
-            />
-          </svg>
           Back
-        </button>
+        </Button>
       </div>
       <div>
         <textarea
@@ -86,44 +87,14 @@ const JobDescription = ({
           </div>
         )}
 
-        <button
+        <Button
           onClick={onFilter}
           disabled={isFiltering}
-          className={`mt-6 bg-purple-600 text-white px-8 py-3 rounded-lg transition-colors duration-200 font-medium ${
-            isFiltering
-              ? "opacity-50 cursor-not-allowed"
-              : "hover:bg-purple-700"
-          }`}
-          type="button"
+          loading={isFiltering}
+          className="mt-6"
         >
-          {isFiltering ? (
-            <span className="flex items-center gap-2">
-              <svg
-                className="animate-spin h-5 w-5"
-                xmlns="http://www.w3.org/2000/svg"
-                fill="none"
-                viewBox="0 0 24 24"
-              >
-                <circle
-                  className="opacity-25"
-                  cx="12"
-                  cy="12"
-                  r="10"
-                  stroke="currentColor"
-                  strokeWidth="4"
-                ></circle>
-                <path
-                  className="opacity-75"
-                  fill="currentColor"
-                  d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"
-                ></path>
-              </svg>
-              Filtering...
-            </span>
-          ) : (
-            "Filter"
-          )}
-        </button>
+          {isFiltering ? "Filtering..." : "Filter"}
+        </Button>
       </div>
     </div>
   );
