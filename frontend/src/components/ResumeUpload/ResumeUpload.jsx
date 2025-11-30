@@ -1,5 +1,8 @@
 import PropTypes from "prop-types";
+import toast from "react-hot-toast";
 import { filterPDFs, validatePDF } from "../../utils/fileValidation";
+import { ERROR_MESSAGES, SUCCESS_MESSAGES } from "../../constants";
+import { logger } from "../../utils/logger";
 import Button from "../Button/Button";
 
 /**
@@ -19,17 +22,20 @@ const ResumeUpload = ({ onFilesUploaded, fileInputRef }) => {
     // Filter only PDF files
     const pdfFiles = filterPDFs(selectedFiles);
     
-    // Show error for non-PDF files
+    // Show error for non-PDF files using toast
     selectedFiles.forEach((file) => {
       const error = validatePDF(file);
       if (error) {
-        alert(error);
+        toast.error(ERROR_MESSAGES.INVALID_PDF(file.name));
+        logger.warn("Invalid file type attempted", { fileName: file.name, fileType: file.type });
       }
     });
 
     // Only upload valid PDF files
     if (pdfFiles.length > 0) {
       onFilesUploaded(pdfFiles);
+      toast.success(SUCCESS_MESSAGES.FILES_UPLOADED(pdfFiles.length));
+      logger.info("Files uploaded successfully", { count: pdfFiles.length });
     }
   };
 

@@ -1,3 +1,4 @@
+import { memo } from "react";
 import PropTypes from "prop-types";
 import Button from "../Button/Button";
 
@@ -13,7 +14,7 @@ import Button from "../Button/Button";
  * @param {string|null} props.filterError - Error message if filter request failed
  * @param {Object|null} props.filterResult - Result from successful filter request
  */
-const JobDescription = ({
+const JobDescription = memo(({
   jobDescription,
   onJobDescriptionChange,
   isVisible,
@@ -98,7 +99,7 @@ const JobDescription = ({
       </div>
     </div>
   );
-};
+});
 
 JobDescription.propTypes = {
   jobDescription: PropTypes.string.isRequired,
@@ -110,6 +111,8 @@ JobDescription.propTypes = {
   filterError: PropTypes.string,
   filterResult: PropTypes.object,
 };
+
+JobDescription.displayName = "JobDescription";
 
 export default JobDescription;
 

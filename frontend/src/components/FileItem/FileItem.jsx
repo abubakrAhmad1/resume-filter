@@ -1,3 +1,4 @@
+import { memo } from "react";
 import PropTypes from "prop-types";
 import Button from "../Button/Button";
 
@@ -7,7 +8,7 @@ import Button from "../Button/Button";
  * @param {Object} props.file - File object with id and name
  * @param {Function} props.onRemove - Callback function when file is removed
  */
-const FileItem = ({ file, onRemove }) => {
+const FileItem = memo(({ file, onRemove }) => {
   return (
     <div className="flex items-center justify-between bg-gray-900 border border-gray-700 rounded-lg p-3 hover:bg-gray-800 hover:border-gray-600 transition-colors">
       <span className="text-gray-200 font-medium flex-1 truncate mr-3">
@@ -34,7 +35,7 @@ const FileItem = ({ file, onRemove }) => {
       </Button>
     </div>
   );
-};
+});
 
 FileItem.propTypes = {
   file: PropTypes.shape({
@@ -43,6 +44,8 @@ FileItem.propTypes = {
   }).isRequired,
   onRemove: PropTypes.func.isRequired,
 };
+
+FileItem.displayName = "FileItem";
 
 export default FileItem;
 
