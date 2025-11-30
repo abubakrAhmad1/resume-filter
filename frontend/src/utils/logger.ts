@@ -13,7 +13,9 @@ export const LogLevel = {
   INFO: "info",
   WARN: "warn",
   ERROR: "error",
-};
+} as const;
+
+export type LogLevelType = typeof LogLevel[keyof typeof LogLevel];
 
 /**
  * Logger class for structured logging
@@ -21,10 +23,10 @@ export const LogLevel = {
 class Logger {
   /**
    * Log debug message (only in development)
-   * @param {string} message - Log message
-   * @param {Object} data - Additional data
+   * @param message - Log message
+   * @param data - Additional data
    */
-  debug(message, data = {}) {
+  debug(message: string, data: Record<string, unknown> = {}): void {
     if (isDevelopment) {
       console.debug(`[DEBUG] ${message}`, data);
     }
@@ -32,10 +34,10 @@ class Logger {
 
   /**
    * Log info message
-   * @param {string} message - Log message
-   * @param {Object} data - Additional data
+   * @param message - Log message
+   * @param data - Additional data
    */
-  info(message, data = {}) {
+  info(message: string, data: Record<string, unknown> = {}): void {
     if (isDevelopment) {
       console.info(`[INFO] ${message}`, data);
     }
@@ -44,10 +46,10 @@ class Logger {
 
   /**
    * Log warning message
-   * @param {string} message - Log message
-   * @param {Object} data - Additional data
+   * @param message - Log message
+   * @param data - Additional data
    */
-  warn(message, data = {}) {
+  warn(message: string, data: Record<string, unknown> = {}): void {
     if (isDevelopment) {
       console.warn(`[WARN] ${message}`, data);
     }
@@ -56,11 +58,15 @@ class Logger {
 
   /**
    * Log error message
-   * @param {string} message - Log message
-   * @param {Error} error - Error object
-   * @param {Object} context - Additional context
+   * @param message - Log message
+   * @param error - Error object
+   * @param context - Additional context
    */
-  error(message, error = null, context = {}) {
+  error(
+    message: string,
+    error: Error | null = null,
+    context: Record<string, unknown> = {}
+  ): void {
     if (isDevelopment) {
       console.error(`[ERROR] ${message}`, { error, ...context });
     }

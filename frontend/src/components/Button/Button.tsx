@@ -1,18 +1,23 @@
-import PropTypes from "prop-types";
+import { ReactNode, ElementType } from "react";
+
+/**
+ * Button component props
+ */
+export interface ButtonProps {
+  children?: ReactNode;
+  onClick?: () => void;
+  disabled?: boolean;
+  loading?: boolean;
+  type?: "button" | "submit" | "reset";
+  className?: string;
+  icon?: ReactNode;
+  variant?: string;
+  iconOnly?: boolean;
+  as?: ElementType;
+}
 
 /**
  * Reusable Button component with consistent styling
- * @param {Object} props - Component props
- * @param {string} props.children - Button content (text or JSX)
- * @param {Function} props.onClick - Click handler function
- * @param {boolean} props.disabled - Whether the button is disabled
- * @param {boolean} props.loading - Whether the button is in loading state
- * @param {string} props.type - Button type (button, submit, reset)
- * @param {string} props.className - Additional CSS classes
- * @param {React.ReactNode} props.icon - Optional icon to display before text
- * @param {string} props.variant - Button variant (for future use, currently all same style)
- * @param {boolean} props.iconOnly - Whether this is an icon-only button (smaller padding)
- * @param {string} props.as - Render as different element (button, span, div, etc.)
  */
 const Button = ({
   children,
@@ -22,10 +27,9 @@ const Button = ({
   type = "button",
   className = "",
   icon,
-  variant = "primary",
   iconOnly = false,
   as: Component = "button",
-}) => {
+}: ButtonProps) => {
   // Base button styles - consistent for all buttons
   const baseStyles = iconOnly
     ? "inline-flex items-center justify-center rounded-full transition-colors duration-200 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-yellow-500"
@@ -41,7 +45,7 @@ const Button = ({
   const buttonStyles = `${baseStyles} ${colorStyles} ${className}`;
 
   // Props to pass to the component
-  const componentProps = {
+  const componentProps: Record<string, unknown> = {
     className: buttonStyles,
     onClick,
     ...(Component === "button" && {
@@ -84,19 +88,6 @@ const Button = ({
       )}
     </Component>
   );
-};
-
-Button.propTypes = {
-  children: PropTypes.node,
-  onClick: PropTypes.func,
-  disabled: PropTypes.bool,
-  loading: PropTypes.bool,
-  type: PropTypes.oneOf(["button", "submit", "reset"]),
-  className: PropTypes.string,
-  icon: PropTypes.node,
-  variant: PropTypes.string,
-  iconOnly: PropTypes.bool,
-  as: PropTypes.elementType,
 };
 
 export default Button;

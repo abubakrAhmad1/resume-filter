@@ -4,11 +4,14 @@ import { ERROR_MESSAGES, API } from "../constants";
 
 /**
  * Sends PDF files and job description to the backend API for filtering
- * @param {File[]} pdfFiles - Array of PDF File objects to send
- * @param {string} jobDescription - Job description text
- * @returns {Promise<Response>} API response
+ * @param pdfFiles - Array of PDF File objects to send
+ * @param jobDescription - Job description text
+ * @returns API response
  */
-export const filterResumes = async (pdfFiles, jobDescription) => {
+export const filterResumes = async (
+  pdfFiles: File[],
+  jobDescription: string
+): Promise<unknown> => {
   // Create FormData to send files and text data
   const formData = new FormData();
 
@@ -16,9 +19,7 @@ export const filterResumes = async (pdfFiles, jobDescription) => {
   pdfFiles.forEach((file) => {
     // Use 'resumes' as the field name (backend can expect multiple files with same name)
     // or use 'resumes[]' if your backend expects array notation
-    // Handle both File objects and file objects with .file property
-    const fileToAppend = file instanceof File ? file : file.file || file;
-    formData.append("resumes", fileToAppend);
+    formData.append("resumes", file);
   });
 
   // Append job description
@@ -51,7 +52,7 @@ export const filterResumes = async (pdfFiles, jobDescription) => {
     if (!response.ok) {
       const errorData = await response.json().catch(() => ({
         message: `HTTP error! status: ${response.status}`,
-      }));
+      })) as { message?: string };
       const errorMessage =
         errorData.message || `API request failed with status ${response.status}`;
       logger.error("API request failed", null, {
@@ -68,11 +69,14 @@ export const filterResumes = async (pdfFiles, jobDescription) => {
     return result;
   } catch (error) {
     clearTimeout(timeoutId);
-    if (error.name === "AbortError") {
+    if (error instanceof Error && error.name === "AbortError") {
       logger.error("API request timeout", error);
       throw new Error("Request timeout. Please try again.");
     }
-    if (error.name === "TypeError" && error.message.includes("fetch")) {
+    if (
+      error instanceof TypeError &&
+      error.message.includes("fetch")
+    ) {
       logger.error("Network error", error);
       throw new Error(ERROR_MESSAGES.NETWORK_ERROR);
     }

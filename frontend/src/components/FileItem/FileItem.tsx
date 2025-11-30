@@ -1,14 +1,19 @@
 import { memo } from "react";
-import PropTypes from "prop-types";
+import { FileWithMetadata } from "../../hooks/useFileUpload";
 import Button from "../Button/Button";
 
 /**
- * FileItem component displays a single uploaded file with delete functionality
- * @param {Object} props - Component props
- * @param {Object} props.file - File object with id and name
- * @param {Function} props.onRemove - Callback function when file is removed
+ * FileItem component props
  */
-const FileItem = memo(({ file, onRemove }) => {
+interface FileItemProps {
+  file: FileWithMetadata;
+  onRemove: (id: string) => void;
+}
+
+/**
+ * FileItem component displays a single uploaded file with delete functionality
+ */
+const FileItem = memo(({ file, onRemove }: FileItemProps) => {
   return (
     <div className="flex items-center justify-between bg-gray-900 border border-gray-700 rounded-lg p-3 hover:bg-gray-800 hover:border-gray-600 transition-colors">
       <span className="text-gray-200 font-medium flex-1 truncate mr-3">
@@ -36,14 +41,6 @@ const FileItem = memo(({ file, onRemove }) => {
     </div>
   );
 });
-
-FileItem.propTypes = {
-  file: PropTypes.shape({
-    id: PropTypes.string.isRequired,
-    name: PropTypes.string.isRequired,
-  }).isRequired,
-  onRemove: PropTypes.func.isRequired,
-};
 
 FileItem.displayName = "FileItem";
 

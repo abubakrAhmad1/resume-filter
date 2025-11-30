@@ -1,14 +1,19 @@
-import PropTypes from "prop-types";
+import { FileWithMetadata } from "../../hooks/useFileUpload";
 import FileItem from "../FileItem/FileItem";
 
 /**
- * FileList component displays a list of uploaded files
- * @param {Object} props - Component props
- * @param {Array} props.files - Array of file objects
- * @param {Function} props.onRemoveFile - Callback function when a file is removed
- * @param {boolean} props.isVisible - Whether the list should be visible
+ * FileList component props
  */
-const FileList = ({ files, onRemoveFile, isVisible }) => {
+interface FileListProps {
+  files: FileWithMetadata[];
+  onRemoveFile: (id: string) => void;
+  isVisible: boolean;
+}
+
+/**
+ * FileList component displays a list of uploaded files
+ */
+const FileList = ({ files, onRemoveFile, isVisible }: FileListProps) => {
   if (files.length === 0) {
     return null;
   }
@@ -31,17 +36,6 @@ const FileList = ({ files, onRemoveFile, isVisible }) => {
       </div>
     </div>
   );
-};
-
-FileList.propTypes = {
-  files: PropTypes.arrayOf(
-    PropTypes.shape({
-      id: PropTypes.string.isRequired,
-      name: PropTypes.string.isRequired,
-    })
-  ).isRequired,
-  onRemoveFile: PropTypes.func.isRequired,
-  isVisible: PropTypes.bool.isRequired,
 };
 
 export default FileList;

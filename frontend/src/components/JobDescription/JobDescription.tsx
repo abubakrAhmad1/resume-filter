@@ -1,18 +1,22 @@
-import { memo } from "react";
-import PropTypes from "prop-types";
+import { memo, ChangeEvent } from "react";
 import Button from "../Button/Button";
 
 /**
+ * JobDescription component props
+ */
+interface JobDescriptionProps {
+  jobDescription: string;
+  onJobDescriptionChange: (event: ChangeEvent<HTMLTextAreaElement>) => void;
+  isVisible: boolean;
+  onFilter: () => void;
+  onBack: () => void;
+  isFiltering?: boolean;
+  filterError?: string | null;
+  filterResult?: unknown;
+}
+
+/**
  * JobDescription component handles job description input
- * @param {Object} props - Component props
- * @param {string} props.jobDescription - Current job description text
- * @param {Function} props.onJobDescriptionChange - Callback when description changes
- * @param {boolean} props.isVisible - Whether the component should be visible
- * @param {Function} props.onFilter - Callback when filter button is clicked
- * @param {Function} props.onBack - Callback when back button is clicked
- * @param {boolean} props.isFiltering - Whether the filter request is in progress
- * @param {string|null} props.filterError - Error message if filter request failed
- * @param {Object|null} props.filterResult - Result from successful filter request
  */
 const JobDescription = memo(({
   jobDescription,
@@ -20,10 +24,10 @@ const JobDescription = memo(({
   isVisible,
   onFilter,
   onBack,
-  isFiltering,
+  isFiltering = false,
   filterError,
   filterResult,
-}) => {
+}: JobDescriptionProps) => {
   return (
     <div
       className={`transition-all duration-500 ease-in-out ${
@@ -70,11 +74,13 @@ const JobDescription = memo(({
         )}
 
         {/* Error Message */}
-        {filterError && (
-          <div className="mt-4 p-4 bg-red-900/30 border border-red-600/50 rounded-lg">
-            <p className="text-sm text-red-300">{filterError}</p>
-          </div>
-        )}
+        <>
+          {typeof filterError === "string" && filterError.length > 0 && (
+            <div className="mt-4 p-4 bg-red-900/30 border border-red-600/50 rounded-lg">
+              <p className="text-sm text-red-300">{filterError}</p>
+            </div>
+          )}
+        </>
 
         {/* Success Message */}
         {filterResult && (
@@ -100,17 +106,6 @@ const JobDescription = memo(({
     </div>
   );
 });
-
-JobDescription.propTypes = {
-  jobDescription: PropTypes.string.isRequired,
-  onJobDescriptionChange: PropTypes.func.isRequired,
-  isVisible: PropTypes.bool.isRequired,
-  onFilter: PropTypes.func.isRequired,
-  onBack: PropTypes.func.isRequired,
-  isFiltering: PropTypes.bool,
-  filterError: PropTypes.string,
-  filterResult: PropTypes.object,
-};
 
 JobDescription.displayName = "JobDescription";
 

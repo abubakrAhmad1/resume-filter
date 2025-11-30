@@ -1,23 +1,41 @@
-import { Component } from "react";
-import PropTypes from "prop-types";
+import { Component, ReactNode, ErrorInfo } from "react";
 import Button from "../Button/Button";
+
+/**
+ * ErrorBoundary component props
+ */
+interface ErrorBoundaryProps {
+  children: ReactNode;
+}
+
+/**
+ * ErrorBoundary component state
+ */
+interface ErrorBoundaryState {
+  hasError: boolean;
+  error: Error | null;
+  errorInfo: ErrorInfo | null;
+}
 
 /**
  * Error Boundary component to catch React errors
  * Provides graceful error handling and user-friendly error messages
  */
-class ErrorBoundary extends Component {
-  constructor(props) {
+class ErrorBoundary extends Component<
+  ErrorBoundaryProps,
+  ErrorBoundaryState
+> {
+  constructor(props: ErrorBoundaryProps) {
     super(props);
     this.state = { hasError: false, error: null, errorInfo: null };
   }
 
-  static getDerivedStateFromError(error) {
+  static getDerivedStateFromError(_error: Error): Partial<ErrorBoundaryState> {
     // Update state so the next render will show the fallback UI
     return { hasError: true };
   }
 
-  componentDidCatch(error, errorInfo) {
+  componentDidCatch(error: Error, errorInfo: ErrorInfo): void {
     // Log error to error reporting service
     this.setState({
       error,
@@ -31,13 +49,13 @@ class ErrorBoundary extends Component {
     }
   }
 
-  handleReset = () => {
+  handleReset = (): void => {
     this.setState({ hasError: false, error: null, errorInfo: null });
     // Optionally reload the page
     window.location.reload();
   };
 
-  render() {
+  render(): ReactNode {
     if (this.state.hasError) {
       return (
         <div className="min-h-screen bg-gradient-to-br from-black via-gray-900 to-black flex items-center justify-center px-4">
@@ -62,7 +80,8 @@ class ErrorBoundary extends Component {
                 Something went wrong
               </h1>
               <p className="text-gray-300 mb-6">
-                We're sorry, but something unexpected happened. Please try refreshing the page.
+                We're sorry, but something unexpected happened. Please try
+                refreshing the page.
               </p>
               {import.meta.env.DEV && this.state.error && (
                 <details className="mb-6 text-left bg-gray-900 p-4 rounded-lg overflow-auto max-h-64">
@@ -75,9 +94,7 @@ class ErrorBoundary extends Component {
                   </pre>
                 </details>
               )}
-              <Button onClick={this.handleReset}>
-                Reload Application
-              </Button>
+              <Button onClick={this.handleReset}>Reload Application</Button>
             </div>
           </div>
         </div>
@@ -87,10 +104,6 @@ class ErrorBoundary extends Component {
     return this.props.children;
   }
 }
-
-ErrorBoundary.propTypes = {
-  children: PropTypes.node.isRequired,
-};
 
 export default ErrorBoundary;
 

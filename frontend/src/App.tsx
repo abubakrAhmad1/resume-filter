@@ -1,4 +1,4 @@
-import { useState, useCallback } from "react";
+import { useState, useCallback, ChangeEvent } from "react";
 import { Toaster } from "react-hot-toast";
 import { useFileUpload } from "./hooks/useFileUpload";
 import ResumeUploadSection from "./components/ResumeUploadSection/ResumeUploadSection";
@@ -6,7 +6,7 @@ import JobDescription from "./components/JobDescription/JobDescription";
 import ErrorBoundary from "./components/ErrorBoundary/ErrorBoundary";
 import { filterResumes } from "./services/api";
 import Button from "./components/Button/Button";
-import { ERROR_MESSAGES, SUCCESS_MESSAGES } from "./constants";
+import { ERROR_MESSAGES } from "./constants";
 import { logger } from "./utils/logger";
 import "./App.css";
 
@@ -14,49 +14,55 @@ import "./App.css";
  * Main App component that orchestrates resume upload and job description flow
  */
 function App() {
-  const { files, fileInputRef, addFiles, removeFile, resetInput } = useFileUpload();
-  const [jobDescription, setJobDescription] = useState("");
-  const [showJobDescription, setShowJobDescription] = useState(false);
-  const [isFiltering, setIsFiltering] = useState(false);
-  const [filterError, setFilterError] = useState(null);
-  const [filterResult, setFilterResult] = useState(null);
+  const { files, fileInputRef, addFiles, removeFile, resetInput } =
+    useFileUpload();
+  const [jobDescription, setJobDescription] = useState<string>("");
+  const [showJobDescription, setShowJobDescription] = useState<boolean>(false);
+  const [isFiltering, setIsFiltering] = useState<boolean>(false);
+  const [filterError, setFilterError] = useState<string | null>(null);
+  const [filterResult, setFilterResult] = useState<unknown>(null);
 
   /**
    * Handles file upload and resets the input
-   * @param {File[]} uploadedFiles - Array of uploaded PDF files
+   * @param uploadedFiles - Array of uploaded PDF files
    */
-  const handleFilesUploaded = useCallback((uploadedFiles) => {
-    addFiles(uploadedFiles);
-    resetInput();
-    logger.info("Files uploaded", { count: uploadedFiles.length });
-  }, [addFiles, resetInput]);
+  const handleFilesUploaded = useCallback(
+    (uploadedFiles: File[]) => {
+      addFiles(uploadedFiles);
+      resetInput();
+      logger.info("Files uploaded", { count: uploadedFiles.length });
+    },
+    [addFiles, resetInput]
+  );
 
   /**
    * Handles job description button click and triggers slide animation
    */
-  const handleAddJobDescription = () => {
+  const handleAddJobDescription = (): void => {
     setShowJobDescription(true);
   };
 
   /**
    * Handles job description text change
-   * @param {Event} event - Change event from textarea
+   * @param event - Change event from textarea
    */
-  const handleJobDescriptionChange = (event) => {
+  const handleJobDescriptionChange = (
+    event: ChangeEvent<HTMLTextAreaElement>
+  ): void => {
     setJobDescription(event.target.value);
   };
 
   /**
    * Handles back button click to return to upload section
    */
-  const handleBack = () => {
+  const handleBack = (): void => {
     setShowJobDescription(false);
   };
 
   /**
    * Handles filter button click - sends PDFs and job description to backend API
    */
-  const handleFilter = useCallback(async () => {
+  const handleFilter = useCallback(async (): Promise<void> => {
     // Validate that files and job description are provided
     if (files.length === 0) {
       setFilterError(ERROR_MESSAGES.NO_FILES);
@@ -91,9 +97,9 @@ function App() {
     } catch (error) {
       // Handle error
       const errorMessage =
-        error.message || ERROR_MESSAGES.API_ERROR;
+        error instanceof Error ? error.message : ERROR_MESSAGES.API_ERROR;
       setFilterError(errorMessage);
-      logger.error("Filter error", error, {
+      logger.error("Filter error", error instanceof Error ? error : null, {
         fileCount: files.length,
         descriptionLength: jobDescription.length,
       });
@@ -135,53 +141,53 @@ function App() {
 
           {/* Main Content Container with relative positioning for animations */}
           <div className="relative min-h-[400px] overflow-hidden">
-          {/* Resume Upload Section */}
-          <div
-            className={`transition-all duration-500 ease-in-out ${
-              !showJobDescription
-                ? "opacity-100 translate-x-0"
-                : "opacity-0 -translate-x-full absolute w-full"
-            }`}
-          >
-            <ResumeUploadSection
-              files={files}
-              onFilesUploaded={handleFilesUploaded}
-              onRemoveFile={removeFile}
-              fileInputRef={fileInputRef}
-              isVisible={!showJobDescription}
-            />
-          </div>
-
-          {/* Job Description Button - shown when upload section is visible */}
-          {!showJobDescription && (
-            <div className="bg-gray-800 border border-gray-700 rounded-lg shadow-xl p-6 mt-6">
-              <Button onClick={handleAddJobDescription}>
-                Add Job Description
-              </Button>
-            </div>
-          )}
-
-          {/* Job Description Section - slides in from right */}
-          <div
-            className={`transition-all duration-500 ease-in-out ${
-              showJobDescription
-                ? "opacity-100 translate-x-0"
-                : "opacity-0 translate-x-full absolute w-full top-0"
-            }`}
-          >
-            <div className="bg-gray-800 border border-gray-700 rounded-lg shadow-xl p-6">
-              <JobDescription
-                jobDescription={jobDescription}
-                onJobDescriptionChange={handleJobDescriptionChange}
-                isVisible={showJobDescription}
-                onFilter={handleFilter}
-                onBack={handleBack}
-                isFiltering={isFiltering}
-                filterError={filterError}
-                filterResult={filterResult}
+            {/* Resume Upload Section */}
+            <div
+              className={`transition-all duration-500 ease-in-out ${
+                !showJobDescription
+                  ? "opacity-100 translate-x-0"
+                  : "opacity-0 -translate-x-full absolute w-full"
+              }`}
+            >
+              <ResumeUploadSection
+                files={files}
+                onFilesUploaded={handleFilesUploaded}
+                onRemoveFile={removeFile}
+                fileInputRef={fileInputRef}
+                isVisible={!showJobDescription}
               />
             </div>
-          </div>
+
+            {/* Job Description Button - shown when upload section is visible */}
+            {!showJobDescription && (
+              <div className="bg-gray-800 border border-gray-700 rounded-lg shadow-xl p-6 mt-6">
+                <Button onClick={handleAddJobDescription}>
+                  Add Job Description
+                </Button>
+              </div>
+            )}
+
+            {/* Job Description Section - slides in from right */}
+            <div
+              className={`transition-all duration-500 ease-in-out ${
+                showJobDescription
+                  ? "opacity-100 translate-x-0"
+                  : "opacity-0 translate-x-full absolute w-full top-0"
+              }`}
+            >
+              <div className="bg-gray-800 border border-gray-700 rounded-lg shadow-xl p-6">
+                <JobDescription
+                  jobDescription={jobDescription}
+                  onJobDescriptionChange={handleJobDescriptionChange}
+                  isVisible={showJobDescription}
+                  onFilter={handleFilter}
+                  onBack={handleBack}
+                  isFiltering={isFiltering}
+                  filterError={filterError}
+                  filterResult={filterResult}
+                />
+              </div>
+            </div>
           </div>
         </div>
       </div>
@@ -190,3 +196,4 @@ function App() {
 }
 
 export default App;
+

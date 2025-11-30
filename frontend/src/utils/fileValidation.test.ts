@@ -28,8 +28,8 @@ describe("fileValidation", () => {
       ];
       const result = filterPDFs(files);
       expect(result).toHaveLength(2);
-      expect(result[0].name).toBe("test1.pdf");
-      expect(result[1].name).toBe("test3.pdf");
+      expect(result[0]?.name).toBe("test1.pdf");
+      expect(result[1]?.name).toBe("test3.pdf");
     });
   });
 

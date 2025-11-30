@@ -1,4 +1,4 @@
-import PropTypes from "prop-types";
+import { ChangeEvent, RefObject } from "react";
 import toast from "react-hot-toast";
 import { filterPDFs, validatePDF } from "../../utils/fileValidation";
 import { ERROR_MESSAGES, SUCCESS_MESSAGES } from "../../constants";
@@ -6,14 +6,22 @@ import { logger } from "../../utils/logger";
 import Button from "../Button/Button";
 
 /**
- * ResumeUpload component handles file upload with PDF validation
- * @param {Object} props - Component props
- * @param {Function} props.onFilesUploaded - Callback function when files are uploaded
- * @param {Object} props.fileInputRef - Ref to the file input element
+ * ResumeUpload component props
  */
-const ResumeUpload = ({ onFilesUploaded, fileInputRef }) => {
-  const handleFileChange = (event) => {
-    const selectedFiles = Array.from(event.target.files);
+interface ResumeUploadProps {
+  onFilesUploaded: (files: File[]) => void;
+  fileInputRef: RefObject<HTMLInputElement | null>;
+}
+
+/**
+ * ResumeUpload component handles file upload with PDF validation
+ */
+const ResumeUpload = ({
+  onFilesUploaded,
+  fileInputRef,
+}: ResumeUploadProps) => {
+  const handleFileChange = (event: ChangeEvent<HTMLInputElement>): void => {
+    const selectedFiles = Array.from(event.target.files || []);
     
     if (selectedFiles.length === 0) {
       return;
@@ -27,7 +35,10 @@ const ResumeUpload = ({ onFilesUploaded, fileInputRef }) => {
       const error = validatePDF(file);
       if (error) {
         toast.error(ERROR_MESSAGES.INVALID_PDF(file.name));
-        logger.warn("Invalid file type attempted", { fileName: file.name, fileType: file.type });
+        logger.warn("Invalid file type attempted", {
+          fileName: file.name,
+          fileType: file.type,
+        });
       }
     });
 
@@ -60,11 +71,6 @@ const ResumeUpload = ({ onFilesUploaded, fileInputRef }) => {
       </p>
     </div>
   );
-};
-
-ResumeUpload.propTypes = {
-  onFilesUploaded: PropTypes.func.isRequired,
-  fileInputRef: PropTypes.object.isRequired,
 };
 
 export default ResumeUpload;
