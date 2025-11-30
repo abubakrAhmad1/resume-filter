@@ -49,7 +49,7 @@ const ResumeUpload = ({ onFilesUploaded, fileInputRef }) => {
         accept=".pdf,application/pdf"
         className="hidden"
       />
-      <p className="mt-2 text-sm text-gray-500">
+      <p className="mt-2 text-sm text-gray-400">
         Only PDF files are allowed
       </p>
     </div>

@@ -9,14 +9,14 @@ import Button from "../Button/Button";
  */
 const FileItem = ({ file, onRemove }) => {
   return (
-    <div className="flex items-center justify-between bg-gray-50 border border-gray-200 rounded-lg p-3 hover:bg-gray-100 transition-colors">
-      <span className="text-gray-800 font-medium flex-1 truncate mr-3">
+    <div className="flex items-center justify-between bg-gray-900 border border-gray-700 rounded-lg p-3 hover:bg-gray-800 hover:border-gray-600 transition-colors">
+      <span className="text-gray-200 font-medium flex-1 truncate mr-3">
         {file.name}
       </span>
       <Button
         onClick={() => onRemove(file.id)}
         iconOnly
-        className="flex-shrink-0 text-red-600 hover:text-red-800 hover:bg-red-50"
+        className="flex-shrink-0 text-gray-400 hover:text-yellow-400 hover:bg-gray-800"
         aria-label={`Remove ${file.name}`}
       >
         <svg

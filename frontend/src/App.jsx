@@ -90,9 +90,9 @@ function App() {
   };
 
   return (
-    <div className="min-h-screen bg-gray-50 py-8 px-4">
+    <div className="min-h-screen bg-gradient-to-br from-black via-gray-900 to-black py-8 px-4">
       <div className="max-w-4xl mx-auto">
-        <h1 className="text-4xl font-extrabold text-blue-600 tracking-wide text-center mb-8">
+        <h1 className="text-4xl font-extrabold bg-gradient-to-r from-yellow-400 via-yellow-500 to-yellow-600 bg-clip-text text-transparent tracking-wide text-center mb-8 drop-shadow-lg">
           Resume Filter
         </h1>
 
@@ -117,7 +117,7 @@ function App() {
 
           {/* Job Description Button - shown when upload section is visible */}
           {!showJobDescription && (
-            <div className="bg-white rounded-lg shadow-md p-6 mt-6">
+            <div className="bg-gray-800 border border-gray-700 rounded-lg shadow-xl p-6 mt-6">
               <Button onClick={handleAddJobDescription}>
                 Add Job Description
               </Button>
@@ -132,7 +132,7 @@ function App() {
                 : "opacity-0 translate-x-full absolute w-full top-0"
             }`}
           >
-            <div className="bg-white rounded-lg shadow-md p-6">
+            <div className="bg-gray-800 border border-gray-700 rounded-lg shadow-xl p-6">
               <JobDescription
                 jobDescription={jobDescription}
                 onJobDescriptionChange={handleJobDescriptionChange}

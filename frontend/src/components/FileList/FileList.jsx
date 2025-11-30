@@ -21,8 +21,8 @@ const FileList = ({ files, onRemoveFile, isVisible }) => {
           : "opacity-0 -translate-x-full pointer-events-none"
       }`}
     >
-      <h3 className="text-lg font-medium text-gray-700 mb-3">
-        Uploaded Files ({files.length})
+      <h3 className="text-lg font-medium text-gray-300 mb-3">
+        Uploaded Files <span className="text-yellow-400">({files.length})</span>
       </h3>
       <div className="space-y-2">
         {files.map((file) => (

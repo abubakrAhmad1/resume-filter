@@ -20,13 +20,13 @@ const ResumeUploadSection = ({
 }) => {
   return (
     <div
-      className={`bg-white rounded-lg shadow-md p-6 transition-all duration-500 ease-in-out ${
+      className={`bg-gray-800 border border-gray-700 rounded-lg shadow-xl p-6 transition-all duration-500 ease-in-out ${
         isVisible
           ? "opacity-100 translate-x-0"
           : "opacity-0 -translate-x-full pointer-events-none"
       }`}
     >
-      <h2 className="text-2xl font-semibold text-gray-800 mb-4">
+      <h2 className="text-2xl font-semibold text-yellow-400 mb-4">
         Upload Resumes
       </h2>
       <ResumeUpload

@@ -28,14 +28,14 @@ const Button = ({
 }) => {
   // Base button styles - consistent for all buttons
   const baseStyles = iconOnly
-    ? "inline-flex items-center justify-center rounded-full transition-colors duration-200 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-blue-500"
-    : "inline-flex items-center justify-center gap-2 px-6 py-3 rounded-lg font-medium transition-colors duration-200 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-blue-500";
+    ? "inline-flex items-center justify-center rounded-full transition-colors duration-200 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-yellow-500"
+    : "inline-flex items-center justify-center gap-2 px-6 py-3 rounded-lg font-medium transition-all duration-200 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-yellow-500 shadow-lg";
 
-  // Consistent color scheme for all buttons (blue)
-  // For icon-only buttons, use a more subtle style but still blue-themed
+  // Black, Gold, and Silver color scheme
+  // Gold for primary buttons, Silver for icon-only buttons
   const colorStyles = iconOnly
-    ? "text-blue-600 hover:text-blue-800 hover:bg-blue-50 disabled:opacity-50 disabled:cursor-not-allowed p-1"
-    : "bg-blue-600 text-white hover:bg-blue-700 disabled:opacity-50 disabled:cursor-not-allowed";
+    ? "text-gray-300 hover:text-yellow-400 hover:bg-gray-800 disabled:opacity-50 disabled:cursor-not-allowed p-1"
+    : "bg-gradient-to-r from-yellow-500 to-yellow-600 text-black hover:from-yellow-400 hover:to-yellow-500 disabled:opacity-50 disabled:cursor-not-allowed font-semibold shadow-md hover:shadow-xl";
 
   // Combine all styles
   const buttonStyles = `${baseStyles} ${colorStyles} ${className}`;

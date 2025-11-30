@@ -32,7 +32,7 @@ const JobDescription = ({
       }`}
     >
       <div className="flex items-center justify-between mb-4">
-        <h2 className="text-2xl font-semibold text-gray-800">
+        <h2 className="text-2xl font-semibold text-yellow-400">
           Job Description
         </h2>
         <Button
@@ -60,28 +60,28 @@ const JobDescription = ({
           value={jobDescription}
           onChange={onJobDescriptionChange}
           placeholder="Enter job description here..."
-          className="w-full h-48 p-4 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent resize-none"
+          className="w-full h-48 p-4 bg-gray-900 border border-gray-600 text-gray-100 placeholder-gray-500 rounded-lg focus:ring-2 focus:ring-yellow-500 focus:border-yellow-500 resize-none"
         />
         {jobDescription && (
-          <div className="mt-4 text-sm text-gray-600">
-            Character count: {jobDescription.length}
+          <div className="mt-4 text-sm text-gray-400">
+            Character count: <span className="text-yellow-400">{jobDescription.length}</span>
           </div>
         )}
 
         {/* Error Message */}
         {filterError && (
-          <div className="mt-4 p-4 bg-red-50 border border-red-200 rounded-lg">
-            <p className="text-sm text-red-800">{filterError}</p>
+          <div className="mt-4 p-4 bg-red-900/30 border border-red-600/50 rounded-lg">
+            <p className="text-sm text-red-300">{filterError}</p>
           </div>
         )}
 
         {/* Success Message */}
         {filterResult && (
-          <div className="mt-4 p-4 bg-green-50 border border-green-200 rounded-lg">
-            <p className="text-sm text-green-800 font-medium">
+          <div className="mt-4 p-4 bg-green-900/30 border border-green-600/50 rounded-lg">
+            <p className="text-sm text-green-300 font-medium">
               Filter completed successfully!
             </p>
-            <pre className="mt-2 text-xs text-green-700 overflow-auto">
+            <pre className="mt-2 text-xs text-gray-300 overflow-auto bg-gray-900/50 p-2 rounded">
               {JSON.stringify(filterResult, null, 2)}
             </pre>
           </div>
