@@ -83,9 +83,9 @@ function App() {
           {/* Job Description Button - shown when upload section is visible */}
           {!showJobDescription && (
             <div className="bg-white rounded-lg shadow-md p-6 mt-6">
-              <h2 className="text-2xl font-semibold text-gray-800 mb-4">
+              {/* <h2 className="text-2xl font-semibold text-gray-800 mb-4">
                 Job Description
-              </h2>
+              </h2> */}
               <button
                 onClick={handleAddJobDescription}
                 className="bg-green-600 text-white px-6 py-3 rounded-lg hover:bg-green-700 transition-colors duration-200 font-medium"
