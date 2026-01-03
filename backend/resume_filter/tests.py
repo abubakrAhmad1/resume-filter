@@ -66,3 +66,4 @@ class SimilarityServiceTestCase(TestCase):
             self.assertGreaterEqual(ranked[0]['similarity_score'], ranked[1]['similarity_score'])
 
 
+
