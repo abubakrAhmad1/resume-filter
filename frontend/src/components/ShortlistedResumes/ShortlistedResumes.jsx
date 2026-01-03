@@ -27,7 +27,7 @@ const ShortlistedResumes = ({ filterResult, isVisible }) => {
         </h2>
         <div className="flex items-center gap-2">
           <span className="text-sm text-gray-400">Threshold:</span>
-          <span className="text-sm font-semibold text-yellow-400">{threshold || 70}%</span>
+          <span className="text-sm font-semibold text-yellow-400">{threshold || 20}%</span>
         </div>
       </div>
 
@@ -53,7 +53,7 @@ const ShortlistedResumes = ({ filterResult, isVisible }) => {
           <div className="flex items-center gap-2 mb-4">
             <div className="h-px flex-1 bg-gradient-to-r from-transparent via-yellow-500/50 to-transparent"></div>
             <span className="text-sm font-medium text-gray-400">
-              Resumes with similarity ≥ {threshold || 70}%
+              Resumes with similarity ≥ {threshold || 20}%
             </span>
             <div className="h-px flex-1 bg-gradient-to-r from-transparent via-yellow-500/50 to-transparent"></div>
           </div>
@@ -175,7 +175,7 @@ const ShortlistedResumes = ({ filterResult, isVisible }) => {
             No Resumes Shortlisted
           </p>
           <p className="text-sm text-yellow-400/80">
-            No resumes matched the similarity threshold of {threshold || 70}%
+            No resumes matched the similarity threshold of {threshold || 20}%
           </p>
         </div>
       )}

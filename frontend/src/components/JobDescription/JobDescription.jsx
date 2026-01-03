@@ -103,7 +103,7 @@ const JobDescription = memo(({
             {filterResult.resumes && filterResult.resumes.length > 0 ? (
               <div className="space-y-2">
                 <p className="text-xs text-gray-400 mb-2">
-                  Resumes with similarity ≥ {filterResult.threshold || 70}%:
+                  Resumes with similarity ≥ {filterResult.threshold || 20}%:
                 </p>
                 <div className="space-y-2 max-h-64 overflow-y-auto">
                   {filterResult.resumes.map((resume, index) => (
@@ -124,7 +124,7 @@ const JobDescription = memo(({
             ) : (
               <div className="bg-yellow-900/30 border border-yellow-600/50 rounded p-3">
                 <p className="text-xs text-yellow-300">
-                  No resumes matched the similarity threshold of {filterResult.threshold || 70}%
+                  No resumes matched the similarity threshold of {filterResult.threshold || 20}%
                 </p>
               </div>
             )}
