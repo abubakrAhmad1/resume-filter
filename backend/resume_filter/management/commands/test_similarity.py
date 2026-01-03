@@ -53,9 +53,9 @@ class Command(BaseCommand):
                 )
         
         # Test ranking
-        self.stdout.write('\nRanking resumes (threshold: 70%)...')
+        self.stdout.write('\nRanking resumes (threshold: 20%)...')
         try:
-            ranked = service.rank_resumes(resumes, job_description, threshold=0.70)
+            ranked = service.rank_resumes(resumes, job_description, threshold=0.20)
             self.stdout.write(f"  Found {len(ranked)} resumes above threshold:")
             for resume in ranked:
                 self.stdout.write(

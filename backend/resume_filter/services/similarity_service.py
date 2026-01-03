@@ -242,7 +242,7 @@ class SimilarityService:
         self, 
         resumes: List[Dict[str, str]], 
         job_description: str,
-        threshold: float = 0.50  # Lowered default threshold for better matching
+        threshold: float = 0.20  # Default threshold 20%
     ) -> List[Dict]:
         """
         Rank resumes by similarity to job description and filter by threshold.
@@ -250,7 +250,7 @@ class SimilarityService:
         Args:
             resumes: List of dictionaries with 'name' and 'text' keys
             job_description: Job description text
-            threshold: Minimum similarity threshold (0-1). Default 0.50 (50%)
+            threshold: Minimum similarity threshold (0-1). Default 0.20 (20%)
                        Note: Semantic similarity scores are typically lower than exact matches
             
         Returns:
@@ -280,15 +280,28 @@ class SimilarityService:
                 score_percentage = round(similarity * 100, 2)
                 all_scores.append((resume['name'], score_percentage))
                 
-                if similarity >= threshold:
+                # Debug logging to verify threshold comparison
+                is_above_threshold = similarity >= threshold
+                logger.debug(
+                    f"Resume {resume['name']}: similarity={similarity:.4f} ({score_percentage:.2f}%), "
+                    f"threshold={threshold:.4f} ({threshold*100:.1f}%), match={is_above_threshold}"
+                )
+                
+                if is_above_threshold:
                     ranked_resumes.append({
                         'name': resume['name'],
                         'text': resume['text'],
                         'similarity_score': score_percentage
                     })
-                    logger.info(f"✓ Resume {resume['name']}: {score_percentage:.2f}% similarity (ABOVE threshold)")
+                    logger.info(
+                        f"✓ Resume {resume['name']}: {score_percentage:.2f}% similarity "
+                        f"(ABOVE threshold of {threshold*100:.1f}%)"
+                    )
                 else:
-                    logger.info(f"✗ Resume {resume['name']}: {score_percentage:.2f}% similarity (below threshold)")
+                    logger.info(
+                        f"✗ Resume {resume['name']}: {score_percentage:.2f}% similarity "
+                        f"(below threshold of {threshold*100:.1f}%)"
+                    )
                     
             except Exception as e:
                 logger.error(f"Error processing resume {resume.get('name', 'unknown')}: {str(e)}", exc_info=True)

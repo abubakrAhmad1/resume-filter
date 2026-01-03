@@ -30,7 +30,7 @@ class FilterResumesView(APIView):
     - Job description text (field: 'job_description')
     
     Returns:
-    - JSON response with filtered and ranked resumes (similarity >= 70%)
+    - JSON response with filtered and ranked resumes (similarity >= 20% by default, configurable)
     """
     parser_classes = (MultiPartParser, FormParser)
     
@@ -103,9 +103,12 @@ class FilterResumesView(APIView):
                     status=status.HTTP_400_BAD_REQUEST
                 )
             
-            # Get similarity threshold from settings or use default (50%)
+            # Get similarity threshold from settings or use default (20%)
             # Note: Semantic similarity scores are typically lower than exact matches
-            threshold = getattr(settings, 'RESUME_SIMILARITY_THRESHOLD', 0.50)
+            threshold = getattr(settings, 'RESUME_SIMILARITY_THRESHOLD', 0.20)
+            
+            # Log the threshold being used for debugging
+            logger.info(f"Using similarity threshold: {threshold*100:.1f}% (threshold value: {threshold})")
             
             # Rank and filter resumes
             ranked_resumes = self.similarity_service.rank_resumes(
