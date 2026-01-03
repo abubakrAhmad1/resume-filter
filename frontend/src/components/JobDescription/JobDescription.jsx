@@ -79,12 +79,65 @@ const JobDescription = memo(({
         {/* Success Message */}
         {filterResult && (
           <div className="mt-4 p-4 bg-green-900/30 border border-green-600/50 rounded-lg">
-            <p className="text-sm text-green-300 font-medium">
-              Filter completed successfully!
+            <p className="text-sm text-green-300 font-medium mb-3">
+              ✓ Filter completed successfully!
             </p>
-            <pre className="mt-2 text-xs text-gray-300 overflow-auto bg-gray-900/50 p-2 rounded">
-              {JSON.stringify(filterResult, null, 2)}
-            </pre>
+            
+            {/* Summary Stats */}
+            <div className="grid grid-cols-3 gap-4 mb-4 text-xs">
+              <div className="bg-gray-900/50 p-2 rounded">
+                <div className="text-gray-400">Total</div>
+                <div className="text-yellow-400 font-semibold">{filterResult.total_resumes || 0}</div>
+              </div>
+              <div className="bg-gray-900/50 p-2 rounded">
+                <div className="text-gray-400">Processed</div>
+                <div className="text-blue-400 font-semibold">{filterResult.processed_resumes || 0}</div>
+              </div>
+              <div className="bg-gray-900/50 p-2 rounded">
+                <div className="text-gray-400">Matched</div>
+                <div className="text-green-400 font-semibold">{filterResult.filtered_resumes || 0}</div>
+              </div>
+            </div>
+
+            {/* Filtered Resumes List */}
+            {filterResult.resumes && filterResult.resumes.length > 0 ? (
+              <div className="space-y-2">
+                <p className="text-xs text-gray-400 mb-2">
+                  Resumes with similarity ≥ {filterResult.threshold || 70}%:
+                </p>
+                <div className="space-y-2 max-h-64 overflow-y-auto">
+                  {filterResult.resumes.map((resume, index) => (
+                    <div
+                      key={index}
+                      className="bg-gray-900/50 p-3 rounded border border-gray-700 flex items-center justify-between"
+                    >
+                      <span className="text-sm text-gray-200 truncate flex-1 mr-2">
+                        {resume.filename}
+                      </span>
+                      <span className="text-sm font-semibold text-yellow-400 whitespace-nowrap">
+                        {resume.similarity_score?.toFixed(2) || '0.00'}%
+                      </span>
+                    </div>
+                  ))}
+                </div>
+              </div>
+            ) : (
+              <div className="bg-yellow-900/30 border border-yellow-600/50 rounded p-3">
+                <p className="text-xs text-yellow-300">
+                  No resumes matched the similarity threshold of {filterResult.threshold || 70}%
+                </p>
+              </div>
+            )}
+
+            {/* Raw JSON (collapsible for debugging) */}
+            <details className="mt-4">
+              <summary className="text-xs text-gray-500 cursor-pointer hover:text-gray-400">
+                View raw JSON
+              </summary>
+              <pre className="mt-2 text-xs text-gray-300 overflow-auto bg-gray-900/50 p-2 rounded max-h-40">
+                {JSON.stringify(filterResult, null, 2)}
+              </pre>
+            </details>
           </div>
         )}
 

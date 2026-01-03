@@ -11,6 +11,8 @@ from rest_framework.response import Response
 from rest_framework import status
 from rest_framework.parsers import MultiPartParser, FormParser
 from django.conf import settings
+from django.views.decorators.csrf import csrf_exempt
+from django.utils.decorators import method_decorator
 
 from .services.pdf_extractor import PDFExtractor
 from .services.similarity_service import SimilarityService
@@ -18,6 +20,7 @@ from .services.similarity_service import SimilarityService
 logger = logging.getLogger(__name__)
 
 
+@method_decorator(csrf_exempt, name='dispatch')
 class FilterResumesView(APIView):
     """
     API endpoint to filter resumes based on job description.
@@ -54,7 +57,7 @@ class FilterResumesView(APIView):
             validation_error = self._validate_request(request)
             if validation_error:
                 return Response(
-                    {'error': validation_error},
+                    {'error': validation_error, 'message': validation_error},
                     status=status.HTTP_400_BAD_REQUEST
                 )
             
@@ -86,8 +89,9 @@ class FilterResumesView(APIView):
                     continue
             
             if not resumes_data:
+                error_msg = 'No valid resumes could be processed'
                 return Response(
-                    {'error': 'No valid resumes could be processed'},
+                    {'error': error_msg, 'message': error_msg},
                     status=status.HTTP_400_BAD_REQUEST
                 )
             
@@ -125,8 +129,9 @@ class FilterResumesView(APIView):
             
         except Exception as e:
             logger.error(f"Unexpected error in filter_resumes: {str(e)}", exc_info=True)
+            error_msg = 'An internal server error occurred. Please try again later.'
             return Response(
-                {'error': 'An internal server error occurred. Please try again later.'},
+                {'error': error_msg, 'message': error_msg},
                 status=status.HTTP_500_INTERNAL_SERVER_ERROR
             )
     

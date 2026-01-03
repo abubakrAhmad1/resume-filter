@@ -52,8 +52,9 @@ export const filterResumes = async (pdfFiles, jobDescription) => {
       const errorData = await response.json().catch(() => ({
         message: `HTTP error! status: ${response.status}`,
       }));
+      // Handle both 'message' and 'error' fields for compatibility
       const errorMessage =
-        errorData.message || `API request failed with status ${response.status}`;
+        errorData.message || errorData.error || `API request failed with status ${response.status}`;
       logger.error("API request failed", null, {
         status: response.status,
         statusText: response.statusText,
