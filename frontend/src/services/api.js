@@ -66,6 +66,7 @@ export const filterResumes = async (pdfFiles, jobDescription) => {
     // Return the response
     const result = await response.json();
     logger.info("API request successful", { result });
+    console.log('my custom result in frontend api.js',result)
     return result;
   } catch (error) {
     clearTimeout(timeoutId);
