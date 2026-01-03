@@ -10,3 +10,4 @@ urlpatterns = [
     path('filter-resumes', FilterResumesView.as_view(), name='filter-resumes'),
 ]
 
+

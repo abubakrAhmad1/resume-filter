@@ -106,3 +106,4 @@ python manage.py runserver 8001
 ### CORS Errors
 Make sure your frontend URL is included in `CORS_ALLOWED_ORIGINS` in `.env`
 
+

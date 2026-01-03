@@ -162,3 +162,4 @@ INFO resume_filter.services.similarity_service Similarity statistics - Avg: 48.7
 INFO resume_filter.services.similarity_service Found 1/2 resumes above 10.0% threshold
 ```
 
+

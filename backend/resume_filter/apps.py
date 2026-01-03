@@ -9,3 +9,4 @@ class ResumeFilterConfig(AppConfig):
         """Initialize app when Django starts."""
         pass
 
+
