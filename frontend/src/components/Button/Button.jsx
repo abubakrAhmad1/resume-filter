@@ -35,6 +35,8 @@ const Button = ({
   // Gold for primary buttons, Silver for icon-only buttons
   const colorStyles = iconOnly
     ? "text-gray-300 hover:text-yellow-400 hover:bg-gray-800 disabled:opacity-50 disabled:cursor-not-allowed p-1"
+    : variant === "secondary"
+    ? "bg-gray-700 text-gray-200 hover:bg-gray-600 disabled:opacity-50 disabled:cursor-not-allowed font-semibold shadow-md hover:shadow-xl border border-gray-600"
     : "bg-gradient-to-r from-yellow-500 to-yellow-600 text-black hover:from-yellow-400 hover:to-yellow-500 disabled:opacity-50 disabled:cursor-not-allowed font-semibold shadow-md hover:shadow-xl";
 
   // Combine all styles

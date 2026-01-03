@@ -1,8 +1,9 @@
 import { useState, useCallback } from "react";
-import { Toaster } from "react-hot-toast";
+import { Toaster, toast } from "react-hot-toast";
 import { useFileUpload } from "./hooks/useFileUpload";
 import ResumeUploadSection from "./components/ResumeUploadSection/ResumeUploadSection";
 import JobDescription from "./components/JobDescription/JobDescription";
+import ShortlistedResumes from "./components/ShortlistedResumes/ShortlistedResumes";
 import ErrorBoundary from "./components/ErrorBoundary/ErrorBoundary";
 import { filterResumes } from "./services/api";
 import Button from "./components/Button/Button";
@@ -17,6 +18,7 @@ function App() {
   const { files, fileInputRef, addFiles, removeFile, resetInput } = useFileUpload();
   const [jobDescription, setJobDescription] = useState("");
   const [showJobDescription, setShowJobDescription] = useState(false);
+  const [showResults, setShowResults] = useState(false);
   const [isFiltering, setIsFiltering] = useState(false);
   const [filterError, setFilterError] = useState(null);
   const [filterResult, setFilterResult] = useState(null);
@@ -51,6 +53,7 @@ function App() {
    */
   const handleBack = () => {
     setShowJobDescription(false);
+    setShowResults(false);
   };
 
   /**
@@ -87,7 +90,18 @@ function App() {
 
       // Handle successful response
       setFilterResult(result);
+      setShowResults(true);
+      setShowJobDescription(false); // Hide job description section, show results
       logger.info("Filter completed successfully", { result });
+      
+      // Show success toast
+      if (result.filtered_resumes > 0) {
+        toast.success(
+          `Successfully shortlisted ${result.filtered_resumes} resume${result.filtered_resumes > 1 ? 's' : ''}!`
+        );
+      } else {
+        toast.info("No resumes matched the similarity threshold");
+      }
     } catch (error) {
       // Handle error
       const errorMessage =
@@ -138,7 +152,7 @@ function App() {
           {/* Resume Upload Section */}
           <div
             className={`transition-all duration-500 ease-in-out ${
-              !showJobDescription
+              !showJobDescription && !showResults
                 ? "opacity-100 translate-x-0"
                 : "opacity-0 -translate-x-full absolute w-full"
             }`}
@@ -148,12 +162,12 @@ function App() {
               onFilesUploaded={handleFilesUploaded}
               onRemoveFile={removeFile}
               fileInputRef={fileInputRef}
-              isVisible={!showJobDescription}
+              isVisible={!showJobDescription && !showResults}
             />
           </div>
 
           {/* Job Description Button - shown when upload section is visible */}
-          {!showJobDescription && (
+          {!showJobDescription && !showResults && (
             <div className="bg-gray-800 border border-gray-700 rounded-lg shadow-xl p-6 mt-6">
               <Button onClick={handleAddJobDescription}>
                 Add Job Description
@@ -164,7 +178,7 @@ function App() {
           {/* Job Description Section - slides in from right */}
           <div
             className={`transition-all duration-500 ease-in-out ${
-              showJobDescription
+              showJobDescription && !showResults
                 ? "opacity-100 translate-x-0"
                 : "opacity-0 translate-x-full absolute w-full top-0"
             }`}
@@ -173,14 +187,44 @@ function App() {
               <JobDescription
                 jobDescription={jobDescription}
                 onJobDescriptionChange={handleJobDescriptionChange}
-                isVisible={showJobDescription}
+                isVisible={showJobDescription && !showResults}
                 onFilter={handleFilter}
                 onBack={handleBack}
                 isFiltering={isFiltering}
                 filterError={filterError}
-                filterResult={filterResult}
+                filterResult={null}
               />
             </div>
+          </div>
+
+          {/* Shortlisted Resumes Results Section */}
+          <div
+            className={`transition-all duration-500 ease-in-out ${
+              showResults
+                ? "opacity-100 translate-x-0"
+                : "opacity-0 translate-x-full absolute w-full top-0"
+            }`}
+          >
+            <ShortlistedResumes
+              filterResult={filterResult}
+              isVisible={showResults}
+            />
+            {showResults && (
+              <div className="mt-6 flex gap-4">
+                <Button onClick={handleBack} variant="secondary">
+                  Back to Upload
+                </Button>
+                <Button
+                  onClick={() => {
+                    setShowResults(false);
+                    setShowJobDescription(true);
+                    setFilterResult(null);
+                  }}
+                >
+                  Filter Again
+                </Button>
+              </div>
+            )}
           </div>
           </div>
         </div>

@@ -78,11 +78,19 @@ class FilterResumesView(APIView):
                     
                     # Extract text
                     text = self.pdf_extractor.extract_text(resume_file)
+                    
+                    # Log extracted text length for debugging
+                    text_length = len(text) if text else 0
+                    logger.info(f"Extracted {text_length} characters from {resume_file.name}")
+                    
+                    if text_length < 50:
+                        logger.warning(f"Very short text extracted from {resume_file.name} ({text_length} chars)")
+                    
                     resumes_data.append({
                         'name': resume_file.name,
                         'text': text
                     })
-                    logger.debug(f"Extracted text from {resume_file.name}")
+                    logger.debug(f"Extracted text from {resume_file.name}: {text[:200]}..." if len(text) > 200 else f"Extracted text from {resume_file.name}: {text}")
                     
                 except Exception as e:
                     logger.error(f"Error processing {resume_file.name}: {str(e)}")
@@ -95,8 +103,9 @@ class FilterResumesView(APIView):
                     status=status.HTTP_400_BAD_REQUEST
                 )
             
-            # Get similarity threshold from settings or use default (70%)
-            threshold = getattr(settings, 'RESUME_SIMILARITY_THRESHOLD', 0.70)
+            # Get similarity threshold from settings or use default (50%)
+            # Note: Semantic similarity scores are typically lower than exact matches
+            threshold = getattr(settings, 'RESUME_SIMILARITY_THRESHOLD', 0.50)
             
             # Rank and filter resumes
             ranked_resumes = self.similarity_service.rank_resumes(

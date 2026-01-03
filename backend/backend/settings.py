@@ -198,7 +198,10 @@ FILE_UPLOAD_MAX_MEMORY_SIZE = 10 * 1024 * 1024  # 10MB
 DATA_UPLOAD_MAX_MEMORY_SIZE = 10 * 1024 * 1024  # 10MB
 
 # Resume Filter Settings
-RESUME_SIMILARITY_THRESHOLD = float(os.getenv('RESUME_SIMILARITY_THRESHOLD', '0.70'))  # 70%
+# Note: Semantic similarity scores are typically lower than exact text matches
+# A score of 0.50 (50%) indicates good semantic similarity
+# A score of 0.70 (70%) indicates very strong similarity
+RESUME_SIMILARITY_THRESHOLD = float(os.getenv('RESUME_SIMILARITY_THRESHOLD', '0.50'))  # 50% (lowered for better matching)
 
 # Logging Configuration
 LOGGING = {
